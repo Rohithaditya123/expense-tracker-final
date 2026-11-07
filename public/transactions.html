@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Transactions - Expense Tracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ================= LOGIN CHECK ================= -->
+
+<script>
+    if (localStorage.getItem("expenseTrackerLoggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+</script>
+
+<!-- ================= BACKGROUND ================= -->
+
+<div class="background">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+</div>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">
+            <i class="fa-solid fa-wallet"></i>
+        </div>
+
+        <span>Expense<span class="logo-highlight">Tracker</span></span>
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <a href="dashboard.html">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="transactions.html" class="active">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            <span>Transactions</span>
+        </a>
+
+        <a href="budget.html">
+            <i class="fa-solid fa-bullseye"></i>
+            <span>Budget</span>
+        </a>
+
+        <a href="reports.html">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Reports</span>
+        </a>
+
+        <a href="accounts.html">
+            <i class="fa-solid fa-wallet"></i>
+            <span>Accounts</span>
+        </a>
+
+        <a href="settings.html">
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <button class="sidebar-logout" onclick="logoutUser()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </button>
+
+    </div>
+
+</aside>
+
+<!-- ================= MAIN ================= -->
+
+<main class="main-content">
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+            <button class="mobile-menu-btn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="text"
+                    id="globalSearch"
+                    placeholder="Search transactions..."
+                >
+            </div>
+        </div>
+
+        <div class="topbar-right">
+
+            <button id="themeToggle" class="icon-button" title="Toggle theme">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+
+            <button class="icon-button">
+                <i class="fa-regular fa-bell"></i>
+            </button>
+
+            <div class="top-profile">
+
+                <div class="profile-avatar" id="topProfileAvatar">
+                    LK
+                </div>
+
+                <div class="profile-info">
+                    <strong id="topProfileName">User</strong>
+                    <span id="topProfileEmail">user@example.com</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- ================= PAGE ================= -->
+
+    <section class="page-section">
+
+        <div class="page-header">
+
+            <div>
+                <span class="page-label">FINANCIAL ACTIVITY</span>
+
+                <h1>
+                    Transactions
+                    <span>Management</span>
+                </h1>
+
+                <p>
+                    Add, search, filter and manage all your financial transactions.
+                </p>
+            </div>
+
+            <button class="primary-btn" id="openTransaction">
+                <i class="fa-solid fa-plus"></i>
+                Add Transaction
+            </button>
+
+        </div>
+
+        <!-- ================= FILTERS ================= -->
+
+        <div class="transaction-filters">
+
+            <div class="filter-search">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="text"
+                    id="transactionSearch"
+                    placeholder="Search by description..."
+                >
+
+            </div>
+
+            <select id="transactionTypeFilter">
+
+                <option value="all">All Types</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+
+            </select>
+
+            <select id="transactionCategoryFilter">
+
+                <option value="all">All Categories</option>
+
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Education">Education</option>
+                <option value="Bills">Bills</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Health">Health</option>
+                <option value="Salary">Salary</option>
+                <option value="Freelance">Freelance</option>
+                <option value="Business">Business</option>
+                <option value="Investment">Investment</option>
+                <option value="Gift">Gift</option>
+                <option value="Other">Other</option>
+
+            </select>
+
+            <select id="transactionAccountFilter">
+
+                <option value="all">All Accounts</option>
+
+                <option value="Cash">Cash</option>
+                <option value="Bank">Bank</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="UPI">UPI</option>
+                <option value="Other">Other</option>
+
+            </select>
+
+            <button
+                class="secondary-btn"
+                id="clearTransactionFilters"
+            >
+                <i class="fa-solid fa-filter-circle-xmark"></i>
+                Clear
+            </button>
+
+        </div>
+
+        <!-- ================= SUMMARY ================= -->
+
+        <div class="transaction-summary">
+
+            <div class="summary-card">
+
+                <div class="summary-icon income-icon">
+                    <i class="fa-solid fa-arrow-down"></i>
+                </div>
+
+                <div>
+                    <span>Total Income</span>
+                    <strong id="transactionIncome">₹0.00</strong>
+                </div>
+
+            </div>
+
+            <div class="summary-card">
+
+                <div class="summary-icon expense-icon">
+                    <i class="fa-solid fa-arrow-up"></i>
+                </div>
+
+                <div>
+                    <span>Total Expenses</span>
+                    <strong id="transactionExpenses">₹0.00</strong>
+                </div>
+
+            </div>
+
+            <div class="summary-card">
+
+                <div class="summary-icon balance-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+
+                <div>
+                    <span>Balance</span>
+                    <strong id="transactionBalance">₹0.00</strong>
+                </div>
+
+            </div>
+
+            <div class="summary-card">
+
+                <div class="summary-icon count-icon">
+                    <i class="fa-solid fa-list"></i>
+                </div>
+
+                <div>
+                    <span>Transactions</span>
+                    <strong id="transactionCount">0</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= TABLE ================= -->
+
+        <div class="content-card transaction-table-card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>All Transactions</h2>
+
+                    <p>
+                        Your transaction history
+                    </p>
+                </div>
+
+                <button
+                    class="icon-button"
+                    id="refreshTransactions"
+                    title="Refresh"
+                >
+                    <i class="fa-solid fa-rotate"></i>
+                </button>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table class="transactions-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Transaction</th>
+
+                            <th>Category</th>
+
+                            <th>Account</th>
+
+                            <th>Date</th>
+
+                            <th>Amount</th>
+
+                            <th>Notes</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="transactionsTableBody">
+                        <!-- Transactions inserted by JavaScript -->
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <!-- EMPTY STATE -->
+
+            <div
+                class="empty-state"
+                id="transactionsEmpty"
+            >
+
+                <div class="empty-icon">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+
+                <h3>No transactions found</h3>
+
+                <p>
+                    Add your first transaction to start tracking your finances.
+                </p>
+
+                <button
+                    class="primary-btn"
+                    id="emptyTransactionBtn"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    Add Transaction
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<!-- ===================================================== -->
+<!-- TRANSACTION MODAL -->
+<!-- ===================================================== -->
+
+<div class="modal-overlay" id="transactionModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <span class="modal-label">NEW TRANSACTION</span>
+                <h2>Add Transaction</h2>
+            </div>
+
+            <button
+                class="modal-close"
+                id="closeTransaction"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <form id="transactionForm">
+
+            <!-- TYPE -->
+
+            <div class="form-group">
+
+                <label>Transaction Type</label>
+
+                <div class="transaction-type">
+
+                    <label class="type-option income-option">
+
+                        <input
+                            type="radio"
+                            name="type"
+                            value="income"
+                            checked
+                        >
+
+                        <span>
+                            <i class="fa-solid fa-arrow-down"></i>
+                            Income
+                        </span>
+
+                    </label>
+
+                    <label class="type-option expense-option">
+
+                        <input
+                            type="radio"
+                            name="type"
+                            value="expense"
+                        >
+
+                        <span>
+                            <i class="fa-solid fa-arrow-up"></i>
+                            Expense
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <input
+                    type="text"
+                    id="description"
+                    name="description"
+                    placeholder="e.g. Monthly salary"
+                    required
+                >
+
+            </div>
+
+            <!-- AMOUNT -->
+
+            <div class="form-group">
+
+                <label for="amount">
+                    Amount
+                </label>
+
+                <div class="amount-input">
+
+                    <span>₹</span>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        placeholder="0.00"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+            <!-- CATEGORY -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select
+                        id="category"
+                        name="category"
+                        required
+                    >
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <option value="Food">Food</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Education">Education</option>
+                        <option value="Bills">Bills</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Health">Health</option>
+                        <option value="Salary">Salary</option>
+                        <option value="Freelance">Freelance</option>
+                        <option value="Business">Business</option>
+                        <option value="Investment">Investment</option>
+                        <option value="Gift">Gift</option>
+                        <option value="Other">Other</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="date">
+                        Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date"
+                        name="date"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+            <!-- ACCOUNT -->
+
+            <div class="form-group">
+
+                <label for="account">
+                    Account
+                </label>
+
+                <select
+                    id="account"
+                    name="account"
+                    required
+                >
+
+                    <option value="">
+                        Select account
+                    </option>
+
+                    <option value="Cash">Cash</option>
+                    <option value="Bank">Bank</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="UPI">UPI</option>
+                    <option value="Other">Other</option>
+
+                </select>
+
+            </div>
+
+            <!-- NOTES -->
+
+            <div class="form-group">
+
+                <label for="notes">
+                    Notes
+                </label>
+
+                <textarea
+                    id="notes"
+                    name="notes"
+                    rows="3"
+                    placeholder="Add optional notes..."
+                ></textarea>
+
+            </div>
+
+            <!-- BUTTONS -->
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    id="cancelTransaction"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    <i class="fa-solid fa-check"></i>
+                    Save Transaction
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ================= TOAST ================= -->
+
+<div class="toast" id="toast">
+
+    <div class="toast-icon">
+        <i class="fa-solid fa-check"></i>
+    </div>
+
+    <div>
+        <strong id="toastTitle">Success</strong>
+        <span id="toastMessage">Transaction saved.</span>
+    </div>
+
+</div>
+
+<!-- ================= SCRIPT ================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+
+<script src="script.js"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* -----------------------------------------
+       Open transaction modal
+    ----------------------------------------- */
+
+    const openButton =
+        document.getElementById("openTransaction");
+
+    const emptyButton =
+        document.getElementById("emptyTransactionBtn");
+
+    const modal =
+        document.getElementById("transactionModal");
+
+    if (openButton) {
+        openButton.addEventListener("click", function () {
+
+            if (typeof openTransactionModal === "function") {
+                openTransactionModal();
+            } else {
+                modal.classList.add("active");
+            }
+
+        });
+    }
+
+    if (emptyButton) {
+        emptyButton.addEventListener("click", function () {
+
+            if (typeof openTransactionModal === "function") {
+                openTransactionModal();
+            } else {
+                modal.classList.add("active");
+            }
+
+        });
+    }
+
+
+    /* -----------------------------------------
+       Close modal
+    ----------------------------------------- */
+
+    const closeButton =
+        document.getElementById("closeTransaction");
+
+    const cancelButton =
+        document.getElementById("cancelTransaction");
+
+    function closeModal() {
+
+        if (typeof closeTransactionModal === "function") {
+            closeTransactionModal();
+        } else {
+            modal.classList.remove("active");
+        }
+
+    }
+
+    if (closeButton) {
+        closeButton.addEventListener("click", closeModal);
+    }
+
+    if (cancelButton) {
+        cancelButton.addEventListener("click", closeModal);
+    }
+
+
+    /* -----------------------------------------
+       Today's date
+    ----------------------------------------- */
+
+    const dateInput =
+        document.getElementById("date");
+
+    if (dateInput && !dateInput.value) {
+
+        const today =
+            new Date().toISOString().split("T")[0];
+
+        dateInput.value = today;
+
+    }
+
+
+    /* -----------------------------------------
+       Search and filters
+    ----------------------------------------- */
+
+    const searchInput =
+        document.getElementById("transactionSearch");
+
+    const typeFilter =
+        document.getElementById("transactionTypeFilter");
+
+    const categoryFilter =
+        document.getElementById("transactionCategoryFilter");
+
+    const accountFilter =
+        document.getElementById("transactionAccountFilter");
+
+    function filterTransactions() {
+
+        if (typeof transactions === "undefined") {
+            return;
+        }
+
+        const search =
+            searchInput.value.toLowerCase().trim();
+
+        const type =
+            typeFilter.value;
+
+        const category =
+            categoryFilter.value;
+
+        const account =
+            accountFilter.value;
+
+        const filtered =
+            transactions.filter(function (transaction) {
+
+                const matchesSearch =
+                    !search ||
+                    String(transaction.description || "")
+                        .toLowerCase()
+                        .includes(search);
+
+                const matchesType =
+                    type === "all" ||
+                    transaction.type === type;
+
+                const matchesCategory =
+                    category === "all" ||
+                    transaction.category === category;
+
+                const matchesAccount =
+                    account === "all" ||
+                    transaction.account === account;
+
+                return (
+                    matchesSearch &&
+                    matchesType &&
+                    matchesCategory &&
+                    matchesAccount
+                );
+
+            });
+
+        renderTransactionsPage(filtered);
+
+    }
+
+
+    if (searchInput) {
+        searchInput.addEventListener(
+            "input",
+            filterTransactions
+        );
+    }
+
+    if (typeFilter) {
+        typeFilter.addEventListener(
+            "change",
+            filterTransactions
+        );
+    }
+
+    if (categoryFilter) {
+        categoryFilter.addEventListener(
+            "change",
+            filterTransactions
+        );
+    }
+
+    if (accountFilter) {
+        accountFilter.addEventListener(
+            "change",
+            filterTransactions
+        );
+    }
+
+
+    /* -----------------------------------------
+       Clear filters
+    ----------------------------------------- */
+
+    const clearFilters =
+        document.getElementById("clearTransactionFilters");
+
+    if (clearFilters) {
+
+        clearFilters.addEventListener(
+            "click",
+            function () {
+
+                searchInput.value = "";
+                typeFilter.value = "all";
+                categoryFilter.value = "all";
+                accountFilter.value = "all";
+
+                filterTransactions();
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       Refresh
+    ----------------------------------------- */
+
+    const refresh =
+        document.getElementById("refreshTransactions");
+
+    if (refresh) {
+
+        refresh.addEventListener(
+            "click",
+            function () {
+
+                transactions =
+                    loadTransactions();
+
+                updateTransactionSummary();
+
+                filterTransactions();
+
+                showToast(
+                    "Updated",
+                    "Transactions refreshed."
+                );
+
+            }
+        );
+
+    }
+
+
+    /* -----------------------------------------
+       Initial rendering
+    ----------------------------------------- */
+
+    updateTransactionSummary();
+
+    if (typeof transactions !== "undefined") {
+        filterTransactions();
+    }
+
+});
+
+
+/* =================================================
+   TRANSACTION PAGE RENDERING
+================================================= */
+
+function renderTransactionsPage(list) {
+
+    const tableBody =
+        document.getElementById("transactionsTableBody");
+
+    const empty =
+        document.getElementById("transactionsEmpty");
+
+    if (!tableBody || !empty) {
+        return;
+    }
+
+    tableBody.innerHTML = "";
+
+    if (!list || list.length === 0) {
+
+        empty.style.display = "flex";
+
+        return;
+
+    }
+
+    empty.style.display = "none";
+
+
+    list.forEach(function (transaction) {
+
+        const row =
+            document.createElement("tr");
+
+        const amount =
+            Number(transaction.amount) || 0;
+
+        const amountClass =
+            transaction.type === "income"
+                ? "income-text"
+                : "expense-text";
+
+        const sign =
+            transaction.type === "income"
+                ? "+"
+                : "-";
+
+
+        row.innerHTML = `
+
+            <td>
+
+                <div class="transaction-name">
+
+                    <div class="transaction-icon
+                        ${transaction.type === "income"
+                            ? "income-icon"
+                            : "expense-icon"}">
+
+                        <i class="fa-solid
+                            ${transaction.type === "income"
+                                ? "fa-arrow-down"
+                                : "fa-arrow-up"}">
+                        </i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            ${escapeHTML(
+                                transaction.description || "Untitled"
+                            )}
+                        </strong>
+
+                        <span>
+                            ${transaction.type === "income"
+                                ? "Income"
+                                : "Expense"}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+            <td>
+                <span class="category-badge">
+                    ${escapeHTML(
+                        transaction.category || "Other"
+                    )}
+                </span>
+            </td>
+
+            <td>
+                ${escapeHTML(
+                    transaction.account || "—"
+                )}
+            </td>
+
+            <td>
+                ${formatDate(
+                    transaction.date
+                )}
+            </td>
+
+            <td class="${amountClass}">
+                <strong>
+                    ${sign}${formatCurrency(amount)}
+                </strong>
+            </td>
+
+            <td class="notes-cell">
+                ${escapeHTML(
+                    transaction.notes || "—"
+                )}
+            </td>
+
+            <td>
+
+                <button
+                    class="delete-transaction-btn"
+                    onclick="deleteTransactionFromPage('${transaction.id}')"
+                    title="Delete transaction"
+                >
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+
+            </td>
+
+        `;
+
+        tableBody.appendChild(row);
+
+    });
+
+}
+
+
+/* =================================================
+   SUMMARY
+================================================= */
+
+function updateTransactionSummary() {
+
+    if (typeof transactions === "undefined") {
+        return;
+    }
+
+    let income = 0;
+    let expenses = 0;
+
+
+    transactions.forEach(function (transaction) {
+
+        const amount =
+            Number(transaction.amount) || 0;
+
+        if (transaction.type === "income") {
+            income += amount;
+        } else {
+            expenses += amount;
+        }
+
+    });
+
+
+    const balance =
+        income - expenses;
+
+
+    const incomeElement =
+        document.getElementById("transactionIncome");
+
+    const expenseElement =
+        document.getElementById("transactionExpenses");
+
+    const balanceElement =
+        document.getElementById("transactionBalance");
+
+    const countElement =
+        document.getElementById("transactionCount");
+
+
+    if (incomeElement) {
+        incomeElement.textContent =
+            formatCurrency(income);
+    }
+
+    if (expenseElement) {
+        expenseElement.textContent =
+            formatCurrency(expenses);
+    }
+
+    if (balanceElement) {
+        balanceElement.textContent =
+            formatCurrency(balance);
+    }
+
+    if (countElement) {
+        countElement.textContent =
+            transactions.length;
+    }
+
+}
+
+
+/* =================================================
+   DELETE
+================================================= */
+
+function deleteTransactionFromPage(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this transaction?"
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    transactions =
+        transactions.filter(function (transaction) {
+            return String(transaction.id) !== String(id);
+        });
+
+
+    localStorage.setItem(
+        TRANSACTION_KEY,
+        JSON.stringify(transactions)
+    );
+
+
+    updateTransactionSummary();
+
+
+    const searchInput =
+        document.getElementById("transactionSearch");
+
+    const typeFilter =
+        document.getElementById("transactionTypeFilter");
+
+    const categoryFilter =
+        document.getElementById("transactionCategoryFilter");
+
+    const accountFilter =
+        document.getElementById("transactionAccountFilter");
+
+
+    const search =
+        searchInput
+            ? searchInput.value.toLowerCase().trim()
+            : "";
+
+    const type =
+        typeFilter
+            ? typeFilter.value
+            : "all";
+
+    const category =
+        categoryFilter
+            ? categoryFilter.value
+            : "all";
+
+    const account =
+        accountFilter
+            ? accountFilter.value
+            : "all";
+
+
+    const filtered =
+        transactions.filter(function (transaction) {
+
+            return (
+
+                (!search ||
+                    String(transaction.description || "")
+                        .toLowerCase()
+                        .includes(search))
+
+                &&
+
+                (type === "all" ||
+                    transaction.type === type)
+
+                &&
+
+                (category === "all" ||
+                    transaction.category === category)
+
+                &&
+
+                (account === "all" ||
+                    transaction.account === account)
+
+            );
+
+        });
+
+
+    renderTransactionsPage(filtered);
+
+
+    if (typeof updateDashboardValues === "function") {
+        updateDashboardValues();
+    }
+
+    if (typeof updateCharts === "function") {
+        updateCharts();
+    }
+
+
+    showToast(
+        "Transaction Deleted",
+        "The transaction was removed."
+    );
+
+}

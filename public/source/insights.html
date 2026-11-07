@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Expense Tracker - Insights</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Inter", sans-serif;
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at 10% 20%, rgba(99,102,241,.20), transparent 30%),
+            radial-gradient(circle at 90% 80%, rgba(168,85,247,.18), transparent 30%),
+            #f5f7fb;
+        color: #1e293b;
+    }
+
+    body.dark {
+        background: #0f172a;
+        color: #f8fafc;
+    }
+
+    .layout {
+        min-height: 100vh;
+        display: flex;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+        width: 250px;
+        min-height: 100vh;
+        padding: 25px 16px;
+        background: rgba(255,255,255,.85);
+        border-right: 1px solid rgba(15,23,42,.08);
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+    }
+
+    body.dark .sidebar {
+        background: #111827;
+        border-color: #1f2937;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 35px;
+        padding: 0 8px;
+    }
+
+    .brand-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        background: linear-gradient(135deg,#6366f1,#8b5cf6);
+    }
+
+    .brand h2 {
+        font-size: 18px;
+    }
+
+    .nav-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        margin: 0 10px 10px;
+    }
+
+    .nav-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 13px 15px;
+        margin-bottom: 5px;
+        border-radius: 12px;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: .25s ease;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-family: inherit;
+        text-align: left;
+    }
+
+    .nav-item i {
+        width: 20px;
+        text-align: center;
+    }
+
+    .nav-item:hover {
+        background: rgba(99,102,241,.10);
+        color: #6366f1;
+        transform: translateX(3px);
+    }
+
+    .nav-item.active {
+        background: linear-gradient(
+            135deg,
+            rgba(99,102,241,.15),
+            rgba(139,92,246,.10)
+        );
+        color: #6366f1;
+    }
+
+    .logout-btn {
+        margin-top: 25px;
+    }
+
+    .logout-btn:hover {
+        background: rgba(239,68,68,.10);
+        color: #ef4444;
+    }
+
+    /* MAIN */
+
+    .main {
+        margin-left: 250px;
+        width: calc(100% - 250px);
+        padding: 30px;
+    }
+
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+    }
+
+    .page-title h1 {
+        font-size: 30px;
+        margin-bottom: 6px;
+    }
+
+    .page-title p {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    body.dark .page-title p {
+        color: #94a3b8;
+    }
+
+    .top-btn {
+        border: none;
+        background: white;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 5px 20px rgba(15,23,42,.06);
+    }
+
+    body.dark .top-btn {
+        background: #1e293b;
+        color: white;
+    }
+
+    /* CARDS */
+
+    .insight-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+
+    .stat-card,
+    .card {
+        background: white;
+        border-radius: 18px;
+        padding: 22px;
+        box-shadow: 0 10px 30px rgba(15,23,42,.06);
+    }
+
+    body.dark .stat-card,
+    body.dark .card {
+        background: #1e293b;
+    }
+
+    .stat-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(99,102,241,.12);
+        color: #6366f1;
+        margin-bottom: 15px;
+    }
+
+    .stat-card h3 {
+        font-size: 23px;
+        margin-bottom: 6px;
+    }
+
+    .stat-card p {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    body.dark .stat-card p {
+        color: #94a3b8;
+    }
+
+    /* CONTENT */
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 22px;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .card-header h2 {
+        font-size: 17px;
+    }
+
+    .chart-box {
+        height: 300px;
+        position: relative;
+    }
+
+    /* OBSERVATIONS */
+
+    .observation {
+        display: flex;
+        gap: 14px;
+        padding: 15px;
+        margin-bottom: 12px;
+        border-radius: 13px;
+        background: #f8fafc;
+    }
+
+    body.dark .observation {
+        background: #0f172a;
+    }
+
+    .observation-icon {
+        min-width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(99,102,241,.12);
+        color: #6366f1;
+    }
+
+    .observation h4 {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .observation p {
+        font-size: 12px;
+        color: #64748b;
+        line-height: 1.5;
+    }
+
+    body.dark .observation p {
+        color: #94a3b8;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 50px 20px;
+        color: #94a3b8;
+    }
+
+    .empty i {
+        font-size: 45px;
+        margin-bottom: 15px;
+    }
+
+    /* RESPONSIVE */
+
+    @media(max-width: 1100px) {
+        .insight-grid {
+            grid-template-columns: repeat(2,1fr);
+        }
+
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media(max-width: 700px) {
+        .sidebar {
+            width: 70px;
+            padding: 20px 8px;
+        }
+
+        .brand h2,
+        .nav-item span,
+        .nav-title {
+            display: none;
+        }
+
+        .brand {
+            justify-content: center;
+        }
+
+        .nav-item {
+            justify-content: center;
+        }
+
+        .main {
+            margin-left: 70px;
+            width: calc(100% - 70px);
+            padding: 20px;
+        }
+
+        .insight-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="layout">
+
+```
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <div class="brand-icon">
+            <i class="fa-solid fa-wallet"></i>
+        </div>
+        <h2>Expense Tracker</h2>
+    </div>
+
+    <div class="nav-title">Menu</div>
+
+    <a href="index.html" class="nav-item">
+        <i class="fa-solid fa-house"></i>
+        <span>Dashboard</span>
+    </a>
+
+    <a href="index.html#transactions" class="nav-item">
+        <i class="fa-solid fa-receipt"></i>
+        <span>Transactions</span>
+    </a>
+
+    <a href="reports.html" class="nav-item">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Reports</span>
+    </a>
+
+    <a href="insights.html" class="nav-item active">
+        <i class="fa-solid fa-lightbulb"></i>
+        <span>Insights</span>
+    </a>
+
+    <a href="accounts.html" class="nav-item">
+        <i class="fa-solid fa-wallet"></i>
+        <span>Accounts</span>
+    </a>
+
+    <a href="settings.html" class="nav-item">
+        <i class="fa-solid fa-gear"></i>
+        <span>Settings</span>
+    </a>
+
+    <button
+        class="nav-item logout-btn"
+        type="button"
+        onclick="logoutUser()"
+    >
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+    </button>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div class="page-title">
+            <h1>Insights</h1>
+            <p>Understand your spending habits</p>
+        </div>
+
+        <button
+            class="top-btn"
+            onclick="toggleTheme()"
+            title="Toggle theme"
+        >
+            <i class="fa-solid fa-moon"></i>
+        </button>
+
+    </div>
+
+
+    <!-- INSIGHT STATS -->
+
+    <div class="insight-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-fire"></i>
+            </div>
+
+            <h3 id="highestCategory">No data</h3>
+
+            <p>Highest Spending Category</p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-receipt"></i>
+            </div>
+
+            <h3 id="averageExpense">₹0</h3>
+
+            <p>Average Expense</p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-piggy-bank"></i>
+            </div>
+
+            <h3 id="savingRate">0%</h3>
+
+            <p>Savings Rate</p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-calendar-days"></i>
+            </div>
+
+            <h3 id="expenseCount">0</h3>
+
+            <p>Expense Transactions</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- CHART + OBSERVATIONS -->
+
+    <div class="content-grid">
+
+        <div class="card">
+
+            <div class="card-header">
+                <h2>Spending by Category</h2>
+                <i class="fa-solid fa-chart-column"></i>
+            </div>
+
+            <div class="chart-box">
+
+                <canvas id="categoryChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-header">
+                <h2>Financial Observations</h2>
+                <i class="fa-solid fa-brain"></i>
+            </div>
+
+            <div id="observations"></div>
+
+        </div>
+
+    </div>
+
+</main>
+```
+
+</div>
+
+<script>
+
+    /* =========================
+       LOGIN PROTECTION
+    ========================= */
+
+    if (
+        localStorage.getItem("expenseTrackerLoggedIn") !== "true"
+    ) {
+        window.location.href = "login.html";
+    }
+
+
+    /* =========================
+       LOGOUT
+    ========================= */
+
+    function logoutUser() {
+
+        localStorage.removeItem("expenseTrackerLoggedIn");
+
+        localStorage.removeItem("expenseTrackerCurrentUser");
+
+        window.location.href = "login.html";
+    }
+
+
+    /* =========================
+       THEME
+    ========================= */
+
+    function toggleTheme() {
+
+        document.body.classList.toggle("dark");
+
+        localStorage.setItem(
+            "expenseTrackerTheme",
+            document.body.classList.contains("dark")
+                ? "dark"
+                : "light"
+        );
+    }
+
+
+    if (
+        localStorage.getItem("expenseTrackerTheme")
+        === "dark"
+    ) {
+        document.body.classList.add("dark");
+    }
+
+
+    /* =========================
+       GET TRANSACTIONS
+    ========================= */
+
+    function getTransactions() {
+
+        const possibleKeys = [
+            "expenseTrackerTransactions",
+            "transactions",
+            "expenses"
+        ];
+
+        for (const key of possibleKeys) {
+
+            try {
+
+                const data =
+                    localStorage.getItem(key);
+
+                if (data) {
+
+                    const parsed =
+                        JSON.parse(data);
+
+                    if (Array.isArray(parsed)) {
+                        return parsed;
+                    }
+
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+        }
+
+        return [];
+    }
+
+
+    /* =========================
+       NORMALIZE TRANSACTION
+    ========================= */
+
+    function normalizeTransaction(transaction) {
+
+        const amount =
+            Number(
+                transaction.amount ??
+                transaction.value ??
+                0
+            );
+
+        const type =
+            String(
+                transaction.type ??
+                transaction.transactionType ??
+                "expense"
+            ).toLowerCase();
+
+        const category =
+            transaction.category ??
+            "Other";
+
+        return {
+            amount: isNaN(amount) ? 0 : amount,
+            type: type,
+            category: category
+        };
+    }
+
+
+    /* =========================
+       GENERATE INSIGHTS
+    ========================= */
+
+    let categoryChart = null;
+
+
+    function generateInsights() {
+
+        const transactions =
+            getTransactions()
+            .map(normalizeTransaction);
+
+
+        const expenses =
+            transactions.filter(
+                transaction =>
+                    transaction.type === "expense"
+            );
+
+
+        const income =
+            transactions
+            .filter(
+                transaction =>
+                    transaction.type === "income"
+            )
+            .reduce(
+                (sum, transaction) =>
+                    sum + transaction.amount,
+                0
+            );
+
+
+        const totalExpense =
+            expenses.reduce(
+                (sum, transaction) =>
+                    sum + transaction.amount,
+                0
+            );
+
+
+        const averageExpense =
+            expenses.length
+                ? totalExpense / expenses.length
+                : 0;
+
+
+        const savingRate =
+            income > 0
+                ? ((income - totalExpense) / income) * 100
+                : 0;
+
+
+        /* CATEGORY TOTALS */
+
+        const categories = {};
+
+
+        expenses.forEach(transaction => {
+
+            if (!categories[transaction.category]) {
+                categories[transaction.category] = 0;
+            }
+
+            categories[transaction.category] +=
+                transaction.amount;
+
+        });
+
+
+        const categoryNames =
+            Object.keys(categories);
+
+
+        const categoryAmounts =
+            Object.values(categories);
+
+
+        /* HIGHEST CATEGORY */
+
+        let highestCategory = "No data";
+
+        if (categoryNames.length > 0) {
+
+            const highestIndex =
+                categoryAmounts.indexOf(
+                    Math.max(...categoryAmounts)
+                );
+
+            highestCategory =
+                categoryNames[highestIndex];
+
+        }
+
+
+        /* UPDATE STATS */
+
+        document.getElementById(
+            "highestCategory"
+        ).textContent = highestCategory;
+
+
+        document.getElementById(
+            "averageExpense"
+        ).textContent =
+            "₹" +
+            Math.round(averageExpense)
+                .toLocaleString("en-IN");
+
+
+        document.getElementById(
+            "savingRate"
+        ).textContent =
+            Math.round(savingRate) + "%";
+
+
+        document.getElementById(
+            "expenseCount"
+        ).textContent =
+            expenses.length;
+
+
+        /* =========================
+           CATEGORY CHART
+        ========================= */
+
+        if (categoryChart) {
+            categoryChart.destroy();
+        }
+
+
+        if (categoryNames.length > 0) {
+
+            categoryChart =
+                new Chart(
+                    document.getElementById(
+                        "categoryChart"
+                    ),
+                    {
+                        type: "bar",
+
+                        data: {
+
+                            labels:
+                                categoryNames,
+
+                            datasets: [
+                                {
+                                    label:
+                                        "Spending",
+
+                                    data:
+                                        categoryAmounts
+                                }
+                            ]
+
+                        },
+
+                        options: {
+
+                            responsive: true,
+
+                            maintainAspectRatio: false,
+
+                            scales: {
+
+                                y: {
+                                    beginAtZero: true
+                                }
+
+                            },
+
+                            plugins: {
+
+                                legend: {
+                                    display: false
+                                }
+
+                            }
+
+                        }
+
+                    }
+                );
+
+        }
+
+
+        /* =========================
+           OBSERVATIONS
+        ========================= */
+
+        const observations =
+            document.getElementById(
+                "observations"
+            );
+
+
+        if (transactions.length === 0) {
+
+            observations.innerHTML = `
+                <div class="empty">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    <h3>No transaction data</h3>
+                    <p>
+                        Add transactions from the
+                        Dashboard to generate insights.
+                    </p>
+                </div>
+            `;
+
+            return;
+        }
+
+
+        let html = "";
+
+
+        html += `
+            <div class="observation">
+                <div class="observation-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+
+                <div>
+                    <h4>Total Spending</h4>
+                    <p>
+                        You have recorded ₹${totalExpense.toLocaleString("en-IN")}
+                        in expenses.
+                    </p>
+                </div>
+            </div>
+        `;
+
+
+        if (highestCategory !== "No data") {
+
+            html += `
+                <div class="observation">
+                    <div class="observation-icon">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+
+                    <div>
+                        <h4>Main Spending Area</h4>
+                        <p>
+                            ${highestCategory} is currently
+                            your highest expense category.
+                        </p>
+                    </div>
+                </div>
+            `;
+
+        }
+
+
+        html += `
+            <div class="observation">
+                <div class="observation-icon">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+
+                <div>
+                    <h4>Average Expense</h4>
+                    <p>
+                        Your average recorded expense is
+                        ₹${Math.round(averageExpense).toLocaleString("en-IN")}.
+                    </p>
+                </div>
+            </div>
+        `;
+
+
+        if (income > 0) {
+
+            html += `
+                <div class="observation">
+                    <div class="observation-icon">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                    </div>
+
+                    <div>
+                        <h4>Savings Rate</h4>
+                        <p>
+                            Your current recorded
+                            income-to-expense savings rate
+                            is ${Math.round(savingRate)}%.
+                        </p>
+                    </div>
+                </div>
+            `;
+
+        } else {
+
+            html += `
+                <div class="observation">
+                    <div class="observation-icon">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </div>
+
+                    <div>
+                        <h4>Income Data</h4>
+                        <p>
+                            Add an income transaction to
+                            calculate your savings rate.
+                        </p>
+                    </div>
+                </div>
+            `;
+
+        }
+
+
+        observations.innerHTML = html;
+
+    }
+
+
+    /* =========================
+       INITIALIZE
+    ========================= */
+
+    generateInsights();
+
+</script>
+
+</body>
+</html>

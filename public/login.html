@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Expense Tracker - Login</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        /* ========================= */
+        /* RESET */
+        /* ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* ========================= */
+        /* BODY */
+        /* ========================= */
+
+        body {
+            min-height: 100vh;
+
+            font-family: "Inter", sans-serif;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background:
+                radial-gradient(
+                    circle at 10% 20%,
+                    rgba(99, 102, 241, 0.35),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 90% 80%,
+                    rgba(168, 85, 247, 0.30),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1e1b4b
+                );
+
+            overflow: hidden;
+        }
+
+
+        /* ========================= */
+        /* BACKGROUND BLOBS */
+        /* ========================= */
+
+        .blob {
+            position: fixed;
+
+            width: 300px;
+            height: 300px;
+
+            border-radius: 50%;
+
+            filter: blur(80px);
+
+            opacity: 0.4;
+
+            animation: float 8s infinite alternate ease-in-out;
+        }
+
+
+        .blob.one {
+            background: #6366f1;
+
+            top: -100px;
+            left: -80px;
+        }
+
+
+        .blob.two {
+            background: #a855f7;
+
+            bottom: -100px;
+            right: -80px;
+
+            animation-delay: 2s;
+        }
+
+
+        @keyframes float {
+
+            from {
+                transform: translate(0, 0);
+            }
+
+            to {
+                transform: translate(40px, 30px);
+            }
+
+        }
+
+
+        /* ========================= */
+        /* AUTH CONTAINER */
+        /* ========================= */
+
+        .auth-container {
+            width: 420px;
+            max-width: 92%;
+
+            padding: 38px;
+
+            border-radius: 25px;
+
+            background: rgba(255, 255, 255, 0.12);
+
+            border: 1px solid rgba(255, 255, 255, 0.18);
+
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.35);
+
+            color: white;
+
+            position: relative;
+            z-index: 2;
+        }
+
+
+        /* ========================= */
+        /* LOGO */
+        /* ========================= */
+
+        .logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+
+        .logo-icon {
+            width: 65px;
+            height: 65px;
+
+            margin: auto;
+
+            border-radius: 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+                );
+
+            font-size: 28px;
+
+            box-shadow:
+                0 12px 30px rgba(99, 102, 241, 0.4);
+        }
+
+
+        .logo h1 {
+            margin-top: 15px;
+            font-size: 28px;
+        }
+
+
+        .logo p {
+            margin-top: 7px;
+
+            color: rgba(255, 255, 255, 0.65);
+
+            font-size: 14px;
+        }
+
+
+        /* ========================= */
+        /* FORM */
+        /* ========================= */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .input-box {
+            position: relative;
+        }
+
+
+        .input-box > i {
+            position: absolute;
+
+            left: 15px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: rgba(255, 255, 255, 0.55);
+
+            pointer-events: none;
+        }
+
+
+        input {
+            width: 100%;
+
+            padding: 14px 45px 14px 44px;
+
+            border: 1px solid rgba(255, 255, 255, 0.15);
+
+            border-radius: 12px;
+
+            outline: none;
+
+            background: rgba(255, 255, 255, 0.08);
+
+            color: white;
+
+            font-size: 14px;
+
+            transition: 0.25s;
+        }
+
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+
+        input:focus {
+            border-color: #818cf8;
+
+            box-shadow:
+                0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+
+        /* ========================= */
+        /* PASSWORD EYE */
+        /* ========================= */
+
+        .password-toggle {
+            position: absolute;
+
+            right: 15px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            cursor: pointer;
+
+            color: rgba(255, 255, 255, 0.55);
+
+            transition: 0.2s;
+        }
+
+
+        .password-toggle:hover {
+            color: white;
+        }
+
+
+        /* ========================= */
+        /* BUTTON */
+        /* ========================= */
+
+        .auth-btn {
+            width: 100%;
+
+            padding: 14px;
+
+            margin-top: 8px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+                );
+
+            color: white;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+            font-size: 15px;
+        }
+
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 30px rgba(99, 102, 241, 0.35);
+        }
+
+
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+
+
+        /* ========================= */
+        /* SWITCH TEXT */
+        /* ========================= */
+
+        .switch-text {
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: rgba(255, 255, 255, 0.65);
+
+            font-size: 14px;
+        }
+
+
+        .switch-text a {
+            color: #a5b4fc;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            text-decoration: none;
+        }
+
+
+        .switch-text a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* ========================= */
+        /* MESSAGES */
+        /* ========================= */
+
+        .message {
+            display: none;
+
+            margin-bottom: 15px;
+
+            padding: 11px;
+
+            border-radius: 10px;
+
+            text-align: center;
+
+            font-size: 13px;
+        }
+
+
+        .success {
+            background: rgba(34, 197, 94, 0.15);
+
+            color: #86efac;
+        }
+
+
+        .error {
+            background: rgba(239, 68, 68, 0.15);
+
+            color: #fca5a5;
+        }
+
+
+        /* ========================= */
+        /* FORM SECTIONS */
+        /* ========================= */
+
+        .form-section {
+            display: none;
+        }
+
+
+        .form-section.active {
+            display: block;
+        }
+
+
+        /* ========================= */
+        /* MOBILE */
+        /* ========================= */
+
+        @media (max-width: 500px) {
+
+            .auth-container {
+                padding: 28px 22px;
+            }
+
+
+            .logo h1 {
+                font-size: 24px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ========================= -->
+    <!-- BACKGROUND -->
+    <!-- ========================= -->
+
+    <div class="blob one"></div>
+    <div class="blob two"></div>
+
+
+    <!-- ========================= -->
+    <!-- AUTHENTICATION CONTAINER -->
+    <!-- ========================= -->
+
+    <div class="auth-container">
+
+
+        <!-- ========================= -->
+        <!-- LOGO -->
+        <!-- ========================= -->
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+
+            <h1>Expense Tracker</h1>
+
+            <p>
+                Manage your money smarter
+            </p>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- LOGIN SECTION -->
+        <!-- ================================================= -->
+
+        <div
+            class="form-section active"
+            id="loginSection"
+        >
+
+            <div
+                id="loginMessage"
+                class="message"
+                role="alert"
+            ></div>
+
+
+            <form id="loginForm">
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="loginEmail">
+                        Email
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-envelope"></i>
+
+                        <input
+                            type="email"
+                            id="loginEmail"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="loginPassword">
+                        Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <span
+                            class="password-toggle"
+                            onclick="togglePassword('loginPassword', this)"
+                            title="Show password"
+                        >
+                            <i class="fa-solid fa-eye"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    class="auth-btn"
+                    type="submit"
+                >
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+                    Login
+
+                </button>
+
+            </form>
+
+
+            <!-- FORGOT PASSWORD -->
+
+            <div class="switch-text">
+
+                <a
+                    href="#"
+                    onclick="showForgotPassword(); return false;"
+                >
+                    Forgot Password?
+                </a>
+
+            </div>
+
+
+            <!-- CREATE ACCOUNT -->
+
+            <div class="switch-text">
+
+                Don't have an account?
+
+                <a
+                    href="#"
+                    onclick="showRegister(); return false;"
+                >
+                    Create Account
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- REGISTER SECTION -->
+        <!-- ================================================= -->
+
+        <div
+            class="form-section"
+            id="registerSection"
+        >
+
+            <div
+                id="registerMessage"
+                class="message"
+                role="alert"
+            ></div>
+
+
+            <form id="registerForm">
+
+
+                <!-- NAME -->
+
+                <div class="form-group">
+
+                    <label for="registerName">
+                        Full Name
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-user"></i>
+
+                        <input
+                            type="text"
+                            id="registerName"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="registerEmail">
+                        Email
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-envelope"></i>
+
+                        <input
+                            type="email"
+                            id="registerEmail"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="registerPassword">
+                        Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        <input
+                            type="password"
+                            id="registerPassword"
+                            placeholder="Create a password"
+                            minlength="6"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <span
+                            class="password-toggle"
+                            onclick="togglePassword('registerPassword', this)"
+                            title="Show password"
+                        >
+                            <i class="fa-solid fa-eye"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+                        Confirm Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Confirm your password"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <span
+                            class="password-toggle"
+                            onclick="togglePassword('confirmPassword', this)"
+                            title="Show password"
+                        >
+                            <i class="fa-solid fa-eye"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REGISTER BUTTON -->
+
+                <button
+                    class="auth-btn"
+                    type="submit"
+                >
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                    Create Account
+
+                </button>
+
+            </form>
+
+
+            <div class="switch-text">
+
+                Already have an account?
+
+                <a
+                    href="#"
+                    onclick="showLogin(); return false;"
+                >
+                    Login
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- FORGOT PASSWORD SECTION -->
+        <!-- ================================================= -->
+
+        <div
+            class="form-section"
+            id="forgotPasswordSection"
+        >
+
+            <div
+                id="forgotMessage"
+                class="message"
+                role="alert"
+            ></div>
+
+
+            <form id="forgotPasswordForm">
+
+
+                <!-- REGISTERED EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="forgotEmail">
+                        Registered Email
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-envelope"></i>
+
+                        <input
+                            type="email"
+                            id="forgotEmail"
+                            placeholder="Enter your registered email"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- NEW PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="newPassword">
+                        New Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        <input
+                            type="password"
+                            id="newPassword"
+                            placeholder="Enter new password"
+                            minlength="6"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <span
+                            class="password-toggle"
+                            onclick="togglePassword('newPassword', this)"
+                            title="Show password"
+                        >
+                            <i class="fa-solid fa-eye"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONFIRM NEW PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="confirmNewPassword">
+                        Confirm New Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                        <input
+                            type="password"
+                            id="confirmNewPassword"
+                            placeholder="Confirm new password"
+                            minlength="6"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <span
+                            class="password-toggle"
+                            onclick="togglePassword('confirmNewPassword', this)"
+                            title="Show password"
+                        >
+                            <i class="fa-solid fa-eye"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RESET PASSWORD BUTTON -->
+
+                <button
+                    class="auth-btn"
+                    type="submit"
+                >
+
+                    <i class="fa-solid fa-key"></i>
+
+                    Reset Password
+
+                </button>
+
+            </form>
+
+
+            <div class="switch-text">
+
+                Remember your password?
+
+                <a
+                    href="#"
+                    onclick="showLogin(); return false;"
+                >
+                    Back to Login
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- JAVASCRIPT -->
+    <!-- ===================================================== -->
+
+    <script>
+
+
+        /* ==========================================
+           CHECK EXISTING LOGIN
+        ========================================== */
+
+        if (
+            localStorage.getItem("expenseTrackerLoggedIn") == "true"
+        ) {
+
+            window.location.href = "index.html";
+
+        }
+
+
+        /* ==========================================
+           SHOW REGISTER
+        ========================================== */
+
+        function showRegister() {
+
+            document
+                .getElementById("loginSection")
+                .classList.remove("active");
+
+            document
+                .getElementById("forgotPasswordSection")
+                .classList.remove("active");
+
+            document
+                .getElementById("registerSection")
+                .classList.add("active");
+
+            clearMessages();
+
+        }
+
+
+        /* ==========================================
+           SHOW LOGIN
+        ========================================== */
+
+        function showLogin() {
+
+            document
+                .getElementById("registerSection")
+                .classList.remove("active");
+
+            document
+                .getElementById("forgotPasswordSection")
+                .classList.remove("active");
+
+            document
+                .getElementById("loginSection")
+                .classList.add("active");
+
+            clearMessages();
+
+        }
+
+
+        /* ==========================================
+           SHOW FORGOT PASSWORD
+        ========================================== */
+
+        function showForgotPassword() {
+
+            document
+                .getElementById("loginSection")
+                .classList.remove("active");
+
+            document
+                .getElementById("registerSection")
+                .classList.remove("active");
+
+            document
+                .getElementById("forgotPasswordSection")
+                .classList.add("active");
+
+            clearMessages();
+
+        }
+
+
+        /* ==========================================
+           PASSWORD VISIBILITY
+        ========================================== */
+
+        function togglePassword(inputId, element) {
+
+            const input =
+                document.getElementById(inputId);
+
+            const icon =
+                element.querySelector("i");
+
+
+            if (input.type === "password") {
+
+                input.type = "text";
+
+                icon.className =
+                    "fa-solid fa-eye-slash";
+
+                element.title = "Hide password";
+
+            } else {
+
+                input.type = "password";
+
+                icon.className =
+                    "fa-solid fa-eye";
+
+                element.title = "Show password";
+
+            }
+
+        }
+
+
+        /* ==========================================
+           SHOW MESSAGE
+        ========================================== */
+
+        function showMessage(
+            elementId,
+            message,
+            type
+        ) {
+
+            const element =
+                document.getElementById(elementId);
+
+
+            element.textContent = message;
+
+            element.className =
+                "message " + type;
+
+            element.style.display = "block";
+
+        }
+
+
+        /* ==========================================
+           CLEAR MESSAGES
+        ========================================== */
+
+        function clearMessages() {
+
+            const loginMessage =
+                document.getElementById("loginMessage");
+
+            const registerMessage =
+                document.getElementById("registerMessage");
+
+            const forgotMessage =
+                document.getElementById("forgotMessage");
+
+
+            if (loginMessage) {
+                loginMessage.style.display = "none";
+            }
+
+
+            if (registerMessage) {
+                registerMessage.style.display = "none";
+            }
+
+
+            if (forgotMessage) {
+                forgotMessage.style.display = "none";
+            }
+
+        }
+
+
+        /* ==========================================
+           GET STORED USER
+        ========================================== */
+
+        function getStoredUser() {
+
+            try {
+
+                const data =
+                    localStorage.getItem(
+                        "expenseTrackerUser"
+                    );
+
+
+                if (!data) {
+
+                    return null;
+
+                }
+
+
+                return JSON.parse(data);
+
+            } catch (error) {
+
+                console.error(
+                    "Could not read stored user:",
+                    error
+                );
+
+                return null;
+
+            }
+
+        }
+
+
+        /* ==========================================
+           REGISTER
+        ========================================== */
+
+        document
+            .getElementById("registerForm")
+            .addEventListener(
+                "submit",
+                function (e) {
+
+                    e.preventDefault();
+
+
+                    const name =
+                        document
+                            .getElementById("registerName")
+                            .value
+                            .trim();
+
+
+                    const email =
+                        document
+                            .getElementById("registerEmail")
+                            .value
+                            .trim()
+                            .toLowerCase();
+
+
+                    const password =
+                        document
+                            .getElementById("registerPassword")
+                            .value;
+
+
+                    const confirmPassword =
+                        document
+                            .getElementById("confirmPassword")
+                            .value;
+
+
+                    /* Validate name */
+
+                    if (name.length < 2) {
+
+                        showMessage(
+                            "registerMessage",
+                            "Please enter a valid name.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* Validate password */
+
+                    if (password.length < 6) {
+
+                        showMessage(
+                            "registerMessage",
+                            "Password must contain at least 6 characters.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* Confirm password */
+
+                    if (password !== confirmPassword) {
+
+                        showMessage(
+                            "registerMessage",
+                            "Passwords do not match.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* Check existing account */
+
+                    const existingUser =
+                        getStoredUser();
+
+
+                    if (
+                        existingUser &&
+                        existingUser.email === email
+                    ) {
+
+                        showMessage(
+                            "registerMessage",
+                            "An account with this email already exists.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* Create user */
+
+                    const user = {
+
+                        name: name,
+
+                        email: email,
+
+                        password: password
+
+                    };
+
+
+                    localStorage.setItem(
+                        "expenseTrackerUser",
+                        JSON.stringify(user)
+                    );
+
+
+                    /* Success */
+
+                    showMessage(
+                        "registerMessage",
+                        "Account created successfully! Please login.",
+                        "success"
+                    );
+
+
+                    /* Return to login */
+
+                    setTimeout(function () {
+
+                        document
+                            .getElementById("registerForm")
+                            .reset();
+
+
+                        showLogin();
+
+
+                        document
+                            .getElementById("loginEmail")
+                            .value = email;
+
+                    }, 1200);
+
+                }
+            );
+
+
+        /* ==========================================
+           LOGIN
+        ========================================== */
+
+        document
+            .getElementById("loginForm")
+            .addEventListener(
+                "submit",
+                function (e) {
+
+                    e.preventDefault();
+
+
+                    const email =
+                        document
+                            .getElementById("loginEmail")
+                            .value
+                            .trim()
+                            .toLowerCase();
+
+
+                    const password =
+                        document
+                            .getElementById("loginPassword")
+                            .value;
+
+
+                    /* Get registered user */
+
+                    const user =
+                        getStoredUser();
+
+
+                    /* No account */
+
+                    if (!user) {
+
+                        showMessage(
+                            "loginMessage",
+                            "No account found. Please create an account first.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* Check credentials */
+
+                    if (
+                        email === user.email &&
+                        password === user.password
+                    ) {
+
+
+                        /* Login status */
+
+                        localStorage.setItem(
+                            "expenseTrackerLoggedIn",
+                            "true"
+                        );
+
+
+                        /* Current user */
+
+                        localStorage.setItem(
+                            "expenseTrackerCurrentUser",
+                            JSON.stringify({
+
+                                name: user.name,
+
+                                email: user.email
+
+                            })
+                        );
+
+
+                        /* Success */
+
+                        showMessage(
+                            "loginMessage",
+                            "Login successful! Opening dashboard...",
+                            "success"
+                        );
+
+
+                        /* Open dashboard */
+
+                        setTimeout(function () {
+
+                            window.location.href =
+                                "index.html";
+
+                        }, 800);
+
+
+                    } else {
+
+                        showMessage(
+                            "loginMessage",
+                            "Incorrect email or password.",
+                            "error"
+                        );
+
+                    }
+
+                }
+            );
+
+
+        /* ==========================================
+           FORGOT PASSWORD / RESET PASSWORD
+        ========================================== */
+
+        document
+            .getElementById("forgotPasswordForm")
+            .addEventListener(
+                "submit",
+                function (e) {
+
+                    e.preventDefault();
+
+
+                    const email =
+                        document
+                            .getElementById("forgotEmail")
+                            .value
+                            .trim()
+                            .toLowerCase();
+
+
+                    const newPassword =
+                        document
+                            .getElementById("newPassword")
+                            .value;
+
+
+                    const confirmNewPassword =
+                        document
+                            .getElementById("confirmNewPassword")
+                            .value;
+
+
+                    /* Get registered user */
+
+                    const user =
+                        getStoredUser();
+
+
+                    /* No account */
+
+                    if (!user) {
+
+                        showMessage(
+                            "forgotMessage",
+                            "No account found. Please create an account first.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* Check registered email */
+
+                    if (email !== user.email) {
+
+                        showMessage(
+                            "forgotMessage",
+                            "This email is not registered.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* Validate new password */
+
+                    if (newPassword.length < 6) {
+
+                        showMessage(
+                            "forgotMessage",
+                            "Password must contain at least 6 characters.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* Confirm new password */
+
+                    if (
+                        newPassword !==
+                        confirmNewPassword
+                    ) {
+
+                        showMessage(
+                            "forgotMessage",
+                            "Passwords do not match.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* Update password */
+
+                    user.password =
+                        newPassword;
+
+
+                    /* Save updated user */
+
+                    localStorage.setItem(
+                        "expenseTrackerUser",
+                        JSON.stringify(user)
+                    );
+
+
+                    /* Success */
+
+                    showMessage(
+                        "forgotMessage",
+                        "Password reset successfully! Please login.",
+                        "success"
+                    );
+
+
+                    /* Return to login */
+
+                    setTimeout(function () {
+
+                        document
+                            .getElementById("forgotPasswordForm")
+                            .reset();
+
+
+                        showLogin();
+
+
+                        document
+                            .getElementById("loginEmail")
+                            .value = email;
+
+                    }, 1200);
+
+                }
+            );
+
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Budget - Expense Tracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<script>
+    if (localStorage.getItem("expenseTrackerLoggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+</script>
+
+<!-- Background -->
+
+<div class="background">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+</div>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            <i class="fa-solid fa-wallet"></i>
+        </div>
+
+        <span>
+            Expense<span class="logo-highlight">Tracker</span>
+        </span>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="dashboard.html">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="transactions.html">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            <span>Transactions</span>
+        </a>
+
+        <a href="budget.html" class="active">
+            <i class="fa-solid fa-bullseye"></i>
+            <span>Budget</span>
+        </a>
+
+        <a href="reports.html">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Reports</span>
+        </a>
+
+        <a href="accounts.html">
+            <i class="fa-solid fa-wallet"></i>
+            <span>Accounts</span>
+        </a>
+
+        <a href="settings.html">
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <button
+            class="sidebar-logout"
+            onclick="logoutUser()"
+        >
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main-content">
+
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <button class="mobile-menu-btn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="text"
+                    id="globalSearch"
+                    placeholder="Search..."
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+            <button
+                id="themeToggle"
+                class="icon-button"
+                title="Toggle theme"
+            >
+                <i class="fa-solid fa-moon"></i>
+            </button>
+
+
+            <button
+                class="icon-button"
+                title="Notifications"
+            >
+                <i class="fa-regular fa-bell"></i>
+            </button>
+
+
+            <div class="top-profile">
+
+                <div
+                    class="profile-avatar"
+                    id="topProfileAvatar"
+                >
+                    LK
+                </div>
+
+                <div class="profile-info">
+
+                    <strong id="topProfileName">
+                        User
+                    </strong>
+
+                    <span id="topProfileEmail">
+                        user@example.com
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= PAGE ================= -->
+
+    <section class="page-section">
+
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <span class="page-label">
+                    FINANCIAL PLANNING
+                </span>
+
+                <h1>
+                    Budget
+                    <span>Management</span>
+                </h1>
+
+                <p>
+                    Set your spending limit and monitor your financial progress.
+                </p>
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                id="openBudgetPage"
+            >
+                <i class="fa-solid fa-plus"></i>
+                Set Budget
+            </button>
+
+        </div>
+
+
+        <!-- ================= BUDGET OVERVIEW ================= -->
+
+        <div class="budget-overview-grid">
+
+
+            <!-- LIMIT -->
+
+            <div class="budget-stat-card">
+
+                <div class="budget-stat-icon">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+
+                <div>
+
+                    <span>Budget Limit</span>
+
+                    <strong id="pageBudgetLimit">
+                        ₹0.00
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- SPENT -->
+
+            <div class="budget-stat-card">
+
+                <div class="budget-stat-icon">
+                    <i class="fa-solid fa-arrow-up"></i>
+                </div>
+
+                <div>
+
+                    <span>Total Spent</span>
+
+                    <strong id="pageBudgetSpent">
+                        ₹0.00
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- REMAINING -->
+
+            <div class="budget-stat-card">
+
+                <div class="budget-stat-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+
+                <div>
+
+                    <span>Remaining</span>
+
+                    <strong id="pageBudgetRemaining">
+                        ₹0.00
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- PERCENT -->
+
+            <div class="budget-stat-card">
+
+                <div class="budget-stat-icon">
+                    <i class="fa-solid fa-percent"></i>
+                </div>
+
+                <div>
+
+                    <span>Used</span>
+
+                    <strong id="pageBudgetPercentage">
+                        0%
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= MAIN BUDGET CARD ================= -->
+
+        <div class="content-card budget-main-card">
+
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="card-label">
+                        MONTHLY BUDGET
+                    </span>
+
+                    <h2>
+                        Spending Progress
+                    </h2>
+
+                    <p>
+                        Monitor your expenses against your budget.
+                    </p>
+
+                </div>
+
+                <button
+                    class="icon-button"
+                    id="editBudgetButton"
+                    title="Edit Budget"
+                >
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+
+            </div>
+
+
+            <!-- PROGRESS -->
+
+            <div class="budget-progress-section">
+
+                <div class="budget-progress-header">
+
+                    <span>
+                        Current spending
+                    </span>
+
+                    <strong id="budgetProgressPercent">
+                        0%
+                    </strong>
+
+                </div>
+
+
+                <div class="large-progress-bar">
+
+                    <div
+                        class="large-progress-fill"
+                        id="budgetProgressFill"
+                        style="width: 0%"
+                    ></div>
+
+                </div>
+
+
+                <div class="budget-progress-values">
+
+                    <span>
+                        Spent:
+                        <strong id="budgetSpentValue">
+                            ₹0.00
+                        </strong>
+                    </span>
+
+                    <span>
+                        Limit:
+                        <strong id="budgetLimitValue">
+                            ₹0.00
+                        </strong>
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div
+                class="budget-status"
+                id="budgetStatus"
+            >
+
+                <div class="budget-status-icon">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        No budget set
+                    </strong>
+
+                    <p>
+                        Set a budget to start tracking your spending.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= INFORMATION ================= -->
+
+        <div class="budget-info-grid">
+
+
+            <div class="content-card">
+
+                <div class="info-icon">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+
+                <h3>
+                    Budget Planning
+                </h3>
+
+                <p>
+                    Set a realistic spending limit based on your income
+                    and regular expenses.
+                </p>
+
+            </div>
+
+
+            <div class="content-card">
+
+                <div class="info-icon">
+                    <i class="fa-solid fa-chart-simple"></i>
+                </div>
+
+                <h3>
+                    Track Spending
+                </h3>
+
+                <p>
+                    Add transactions regularly to keep your budget
+                    progress accurate.
+                </p>
+
+            </div>
+
+
+            <div class="content-card">
+
+                <div class="info-icon">
+                    <i class="fa-solid fa-piggy-bank"></i>
+                </div>
+
+                <h3>
+                    Save More
+                </h3>
+
+                <p>
+                    Monitoring your expenses can help you identify
+                    areas where you can reduce spending.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ===================================================== -->
+<!-- BUDGET MODAL -->
+<!-- ===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="budgetModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="modal-label">
+                    BUDGET SETTINGS
+                </span>
+
+                <h2>
+                    Set Monthly Budget
+                </h2>
+
+            </div>
+
+
+            <button
+                class="modal-close"
+                id="closeBudget"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <form id="budgetForm">
+
+            <div class="form-group">
+
+                <label for="budgetAmount">
+                    Monthly Budget Amount
+                </label>
+
+                <div class="amount-input">
+
+                    <span>₹</span>
+
+                    <input
+                        type="number"
+                        id="budgetAmount"
+                        min="0"
+                        step="0.01"
+                        placeholder="Enter budget amount"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    id="cancelBudget"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    <i class="fa-solid fa-check"></i>
+                    Save Budget
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- ================= TOAST ================= -->
+
+<div
+    class="toast"
+    id="toast"
+>
+
+    <div class="toast-icon">
+        <i class="fa-solid fa-check"></i>
+    </div>
+
+    <div>
+
+        <strong id="toastTitle">
+            Success
+        </strong>
+
+        <span id="toastMessage">
+            Budget updated.
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- ================= SCRIPTS ================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+
+<script src="script.js"></script>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =========================================
+       OPEN BUDGET MODAL
+    ========================================= */
+
+    const openButton =
+        document.getElementById("openBudgetPage");
+
+    const editButton =
+        document.getElementById("editBudgetButton");
+
+    const modal =
+        document.getElementById("budgetModal");
+
+
+    function openBudgetPageModal() {
+
+        if (typeof openBudgetModal === "function") {
+
+            openBudgetModal();
+
+        } else {
+
+            modal.classList.add("active");
+
+        }
+
+    }
+
+
+    if (openButton) {
+        openButton.addEventListener(
+            "click",
+            openBudgetPageModal
+        );
+    }
+
+
+    if (editButton) {
+        editButton.addEventListener(
+            "click",
+            openBudgetPageModal
+        );
+    }
+
+
+    /* =========================================
+       CLOSE MODAL
+    ========================================= */
+
+    const closeButton =
+        document.getElementById("closeBudget");
+
+    const cancelButton =
+        document.getElementById("cancelBudget");
+
+
+    function closeBudgetPageModal() {
+
+        if (typeof closeBudgetModal === "function") {
+
+            closeBudgetModal();
+
+        } else {
+
+            modal.classList.remove("active");
+
+        }
+
+    }
+
+
+    if (closeButton) {
+        closeButton.addEventListener(
+            "click",
+            closeBudgetPageModal
+        );
+    }
+
+
+    if (cancelButton) {
+        cancelButton.addEventListener(
+            "click",
+            closeBudgetPageModal
+        );
+    }
+
+
+    /* =========================================
+       UPDATE PAGE
+    ========================================= */
+
+    updateBudgetPage();
+
+});
+
+
+/* =====================================================
+   BUDGET PAGE UPDATE
+===================================================== */
+
+function updateBudgetPage() {
+
+    const limit =
+        Number(budget) || 0;
+
+
+    let spent = 0;
+
+
+    if (typeof transactions !== "undefined") {
+
+        transactions.forEach(function (transaction) {
+
+            if (transaction.type === "expense") {
+
+                spent +=
+                    Number(transaction.amount) || 0;
+
+            }
+
+        });
+
+    }
+
+
+    const remaining =
+        Math.max(limit - spent, 0);
+
+
+    let percentage = 0;
+
+
+    if (limit > 0) {
+
+        percentage =
+            (spent / limit) * 100;
+
+    }
+
+
+    const displayPercentage =
+        Math.round(percentage);
+
+
+    /* =========================================
+       STAT CARDS
+    ========================================= */
+
+    const limitElement =
+        document.getElementById("pageBudgetLimit");
+
+    const spentElement =
+        document.getElementById("pageBudgetSpent");
+
+    const remainingElement =
+        document.getElementById("pageBudgetRemaining");
+
+    const percentageElement =
+        document.getElementById("pageBudgetPercentage");
+
+
+    if (limitElement) {
+        limitElement.textContent =
+            formatCurrency(limit);
+    }
+
+
+    if (spentElement) {
+        spentElement.textContent =
+            formatCurrency(spent);
+    }
+
+
+    if (remainingElement) {
+        remainingElement.textContent =
+            formatCurrency(remaining);
+    }
+
+
+    if (percentageElement) {
+        percentageElement.textContent =
+            displayPercentage + "%";
+    }
+
+
+    /* =========================================
+       PROGRESS
+    ========================================= */
+
+    const progressFill =
+        document.getElementById("budgetProgressFill");
+
+    const progressPercent =
+        document.getElementById("budgetProgressPercent");
+
+
+    if (progressFill) {
+
+        progressFill.style.width =
+            Math.min(percentage, 100) + "%";
+
+    }
+
+
+    if (progressPercent) {
+
+        progressPercent.textContent =
+            displayPercentage + "%";
+
+    }
+
+
+    const spentValue =
+        document.getElementById("budgetSpentValue");
+
+    const limitValue =
+        document.getElementById("budgetLimitValue");
+
+
+    if (spentValue) {
+
+        spentValue.textContent =
+            formatCurrency(spent);
+
+    }
+
+
+    if (limitValue) {
+
+        limitValue.textContent =
+            formatCurrency(limit);
+
+    }
+
+
+    /* =========================================
+       STATUS
+    ========================================= */
+
+    const status =
+        document.getElementById("budgetStatus");
+
+
+    if (!status) {
+        return;
+    }
+
+
+    if (limit === 0) {
+
+        status.innerHTML = `
+
+            <div class="budget-status-icon">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+            </div>
+
+            <div>
+
+                <strong>
+                    No budget set
+                </strong>
+
+                <p>
+                    Set a budget to start tracking your spending.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+    else if (percentage >= 100) {
+
+        status.innerHTML = `
+
+            <div class="budget-status-icon">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+            </div>
+
+            <div>
+
+                <strong>
+                    Budget limit reached
+                </strong>
+
+                <p>
+                    Your expenses have reached or exceeded your budget.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+    else if (percentage >= 80) {
+
+        status.innerHTML = `
+
+            <div class="budget-status-icon">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+            </div>
+
+            <div>
+
+                <strong>
+                    Approaching budget limit
+                </strong>
+
+                <p>
+                    You have used ${displayPercentage}% of your budget.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+    else {
+
+        status.innerHTML = `
+
+            <div class="budget-status-icon">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+            </div>
+
+            <div>
+
+                <strong>
+                    Budget is on track
+                </strong>
+
+                <p>
+                    You have ${formatCurrency(remaining)}
+                    remaining in your budget.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

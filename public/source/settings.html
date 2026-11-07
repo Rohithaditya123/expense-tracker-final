@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Expense Tracker - Settings</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(99,102,241,.20), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(168,85,247,.18), transparent 30%),
+                #f5f7fb;
+            color: #1e293b;
+        }
+
+        body.dark {
+            background: #0f172a;
+            color: #f8fafc;
+        }
+
+        .layout {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            padding: 25px 16px;
+            background: rgba(255,255,255,.85);
+            border-right: 1px solid rgba(15,23,42,.08);
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        body.dark .sidebar {
+            background: #111827;
+            border-color: #1f2937;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 35px;
+            padding: 0 8px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            background: linear-gradient(135deg,#6366f1,#8b5cf6);
+        }
+
+        .brand h2 {
+            font-size: 18px;
+        }
+
+        .nav-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin: 0 10px 10px;
+        }
+
+        .nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 13px 15px;
+            margin-bottom: 5px;
+            border-radius: 12px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: .25s ease;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-item:hover {
+            background: rgba(99,102,241,.10);
+            color: #6366f1;
+            transform: translateX(3px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(
+                135deg,
+                rgba(99,102,241,.15),
+                rgba(139,92,246,.10)
+            );
+            color: #6366f1;
+        }
+
+        .logout-btn {
+            margin-top: 25px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239,68,68,.10);
+            color: #ef4444;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-size: 30px;
+            margin-bottom: 6px;
+        }
+
+        .page-title p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        body.dark .page-title p {
+            color: #94a3b8;
+        }
+
+        .top-btn {
+            border: none;
+            background: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(15,23,42,.06);
+        }
+
+        body.dark .top-btn {
+            background: #1e293b;
+            color: white;
+        }
+
+        /* SETTINGS CONTENT */
+        
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            max-width: 1000px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(15,23,42,.06);
+            height: fit-content;
+        }
+
+        body.dark .card {
+            background: #1e293b;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        body.dark .card-header {
+            border-color: #334155;
+        }
+
+        .card-header-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99,102,241,.12);
+            color: #6366f1;
+            font-size: 16px;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+        }
+
+        /* FORMS */
+
+        .form-group {
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        body.dark .form-group label {
+            color: #94a3b8;
+        }
+
+        input, select {
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+            background: #f8fafc;
+            width: 100%;
+        }
+
+        body.dark input, body.dark select {
+            background: #0f172a;
+            border-color: #334155;
+            color: white;
+        }
+
+        .btn-submit {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            width: fit-content;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99,102,241,.3);
+        }
+
+        /* DANGER ZONE */
+        
+        .danger-zone {
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: rgba(239, 68, 68, 0.03);
+        }
+
+        body.dark .danger-zone {
+            border-color: rgba(239, 68, 68, 0.1);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .danger-zone .card-header-icon {
+            background: rgba(239, 68, 68, 0.12);
+            color: #ef4444;
+        }
+
+        .danger-text {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        body.dark .danger-text {
+            color: #94a3b8;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        /* NOTIFICATION */
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 900px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 700px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 8px;
+            }
+            .brand h2, .nav-item span, .nav-title {
+                display: none;
+            }
+            .brand { justify-content: center; }
+            .nav-item { justify-content: center; }
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+            <h2>Expense Tracker</h2>
+        </div>
+
+        <div class="nav-title">Menu</div>
+
+        <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="index.html#transactions" class="nav-item">
+            <i class="fa-solid fa-receipt"></i>
+            <span>Transactions</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Reports</span>
+        </a>
+        <a href="insights.html" class="nav-item">
+            <i class="fa-solid fa-lightbulb"></i>
+            <span>Insights</span>
+        </a>
+        <a href="accounts.html" class="nav-item">
+            <i class="fa-solid fa-wallet"></i>
+            <span>Accounts</span>
+        </a>
+        <a href="settings.html" class="nav-item active">
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+        </a>
+
+        <button class="nav-item logout-btn" type="button" onclick="logoutUser()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+        </button>
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="topbar">
+            <div class="page-title">
+                <h1>Settings</h1>
+                <p>Manage your account preferences</p>
+            </div>
+            <button class="top-btn" onclick="toggleTheme()" title="Toggle theme">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+
+        <div class="settings-grid">
+            
+            <!-- PROFILE SETTINGS -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h2>Profile Information</h2>
+                </div>
+
+                <form onsubmit="saveProfile(event)">
+                    <div class="form-group">
+                        <label>Display Name</label>
+                        <input type="text" id="profileName" placeholder="Enter your name" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">Save Profile</button>
+                </form>
+            </div>
+
+            <!-- APP PREFERENCES -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <h2>App Preferences</h2>
+                </div>
+
+                <form onsubmit="savePreferences(event)">
+                    <div class="form-group">
+                        <label>Default Currency</label>
+                        <select id="currencySelect">
+                            <option value="₹">₹ - Indian Rupee (INR)</option>
+                            <option value="$">$ - US Dollar (USD)</option>
+                            <option value="€">€ - Euro (EUR)</option>
+                            <option value="£">£ - British Pound (GBP)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date Format</label>
+                        <select id="dateFormatSelect">
+                            <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">Save Preferences</button>
+                </form>
+            </div>
+
+            <!-- DATA MANAGEMENT (DANGER ZONE) -->
+            <div class="card danger-zone">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h2>Danger Zone</h2>
+                </div>
+
+                <p class="danger-text">
+                    This will permanently delete all your transactions, custom accounts, and settings from this browser. This action cannot be undone.
+                </p>
+
+                <button class="btn-danger" onclick="clearData()">
+                    <i class="fa-solid fa-trash-can"></i>
+                    Erase All Data
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div class="toast" id="toastMessage">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toastText">Settings saved successfully!</span>
+</div>
+
+<script>
+    /* =========================
+       LOGIN PROTECTION
+    ========================= */
+    if (localStorage.getItem("expenseTrackerLoggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+
+    /* =========================
+       LOGOUT
+    ========================= */
+    function logoutUser() {
+        localStorage.removeItem("expenseTrackerLoggedIn");
+        localStorage.removeItem("expenseTrackerCurrentUser");
+        window.location.href = "login.html";
+    }
+
+    /* =========================
+       THEME
+    ========================= */
+    function toggleTheme() {
+        document.body.classList.toggle("dark");
+        localStorage.setItem(
+            "expenseTrackerTheme",
+            document.body.classList.contains("dark") ? "dark" : "light"
+        );
+    }
+
+    if (localStorage.getItem("expenseTrackerTheme") === "dark") {
+        document.body.classList.add("dark");
+    }
+
+    /* =========================
+       SETTINGS LOGIC
+    ========================= */
+    
+    // Load existing settings on page load
+    function loadSettings() {
+        // Load Profile Name
+        const currentUser = localStorage.getItem("expenseTrackerCurrentUser") || "";
+        document.getElementById("profileName").value = currentUser;
+
+        // Load Currency
+        const savedCurrency = localStorage.getItem("expenseTrackerCurrency") || "₹";
+        document.getElementById("currencySelect").value = savedCurrency;
+
+        // Load Date Format
+        const savedDateFormat = localStorage.getItem("expenseTrackerDateFormat") || "DD/MM/YYYY";
+        document.getElementById("dateFormatSelect").value = savedDateFormat;
+    }
+
+    // Save Profile
+    function saveProfile(e) {
+        e.preventDefault();
+        const newName = document.getElementById("profileName").value;
+        localStorage.setItem("expenseTrackerCurrentUser", newName);
+        showToast("Profile updated successfully");
+    }
+
+    // Save Preferences
+    function savePreferences(e) {
+        e.preventDefault();
+        const currency = document.getElementById("currencySelect").value;
+        const dateFormat = document.getElementById("dateFormatSelect").value;
+        
+        localStorage.setItem("expenseTrackerCurrency", currency);
+        localStorage.setItem("expenseTrackerDateFormat", dateFormat);
+        
+        showToast("Preferences saved");
+    }
+
+    // Clear All Data
+    function clearData() {
+        const confirmDelete = confirm("Are you absolutely sure? This will wipe all transactions, accounts, and settings. This cannot be undone.");
+        
+        if (confirmDelete) {
+            // Keep theme preference if desired, or wipe entirely
+            const theme = localStorage.getItem("expenseTrackerTheme");
+            
+            localStorage.clear();
+            
+            if (theme) {
+                localStorage.setItem("expenseTrackerTheme", theme);
+            }
+            
+            // Redirect to login
+            window.location.href = "login.html";
+        }
+    }
+
+    // UI Toast Notification
+    function showToast(message) {
+        const toast = document.getElementById("toastMessage");
+        const toastText = document.getElementById("toastText");
+        
+        toastText.innerText = message;
+        toast.classList.add("show");
+        
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 3000);
+    }
+
+    // Initialize
+    loadSettings();
+
+</script>
+</body>
+</html>
